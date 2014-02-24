@@ -1,5 +1,5 @@
 
-import com.sutemi.example.hello._
+import com.sutemi.example.user._
 import com.twitter.finagle.Thrift
 import com.twitter.util.{Await, Future}
 import org.apache.thrift.protocol.TBinaryProtocol
@@ -10,16 +10,10 @@ import java.net.InetSocketAddress
 object UserService {
 
 	def main(args: Array[String]) {
-		//val server = Thrift.serveIface("localhost:8080", new Hello[Future] {
-		//	def hi() = Future.value("hi")
-		//})
-		//Await.ready(server)
 
-		//val service = Thrift.serve("localhost:8080", new HelloServiceImpl)
-		
-		val processor = new HelloServiceImpl
+		val processor = new UserServiceImpl
 
-		val service = new HelloService.FinagledService(processor,
+		val service = new UserRpc.FinagledService(processor,
 			new TBinaryProtocol.Factory())
 
 		ServerBuilder()
@@ -30,7 +24,10 @@ object UserService {
 	}
 }
 
-class HelloServiceImpl extends HelloService.FutureIface {
-	def hi() = Future.value("hi")
+class UserServiceImpl extends UserRpc.FutureIface {
+  def getUser() = {
+    val user = User(Some("Chris"), Some("chris@chris.com"))
+    Future.value(user)
+  }
 }
 

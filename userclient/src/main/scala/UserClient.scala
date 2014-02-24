@@ -7,11 +7,10 @@ import com.twitter.finagle.builder.ClientBuilder
 import com.twitter.finagle.Thrift
 
 
-import com.sutemi.example.hello._
+import com.sutemi.example.user._
 
 object UserClient {
 	def main(args: Array[String]) {
-		val host = "localhost"
 		val port = 8080
 
 		val service: Service[ThriftClientRequest, Array[Byte]] = 
@@ -21,15 +20,11 @@ object UserClient {
 				.hostConnectionLimit(1)
 				.build()
 
-		//val client = Thrift.newIface[HelloService.FutureIface]("localhost:8080")
-		val client = new HelloService.FinagledClient(service, new TBinaryProtocol.Factory())
+		val client = new UserRpc.FinagledClient(service, new TBinaryProtocol.Factory())
 
-		//val helloFuture = client.hi()
-
-		client.hi() onSuccess { message => println("received response: " + message) }
+		client.getUser() onSuccess { message => println("received response: User.name: " + message.name.get) }
 		//ensure { service.close() }
 
-		//Await.result(helloFuture)
 	}
 }
 
