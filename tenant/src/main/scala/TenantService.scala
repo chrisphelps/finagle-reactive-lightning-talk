@@ -1,4 +1,4 @@
-import com.sutemi.example.tenant._
+import com.sutemi.example.lightning._
 import com.twitter.finagle.Thrift
 import com.twitter.util.{Await, Future}
 import org.apache.thrift.protocol.TBinaryProtocol

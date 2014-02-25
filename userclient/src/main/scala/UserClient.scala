@@ -7,7 +7,7 @@ import com.twitter.finagle.builder.ClientBuilder
 import com.twitter.finagle.Thrift
 
 
-import com.sutemi.example.user._
+import com.sutemi.example.lightning._
 
 object UserClient {
 	def main(args: Array[String]) {
