@@ -25,7 +25,7 @@ object PersonalizationService {
 
 class PersonalizationServiceImpl extends PersonalizationRpc.FutureIface {
   def personalizeContent(incontent: Content, user:User) = {
-    val content = Content(incontent.title, incontent.description, Some("Personalized for " + user.name))
+    val content = Content(incontent.title, incontent.description, Some("Personalized for " + user.name.get))
     Future.value(content)
   }
 }

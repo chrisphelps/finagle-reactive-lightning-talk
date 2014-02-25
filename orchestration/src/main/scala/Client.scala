@@ -18,13 +18,35 @@ object Client {
 
 		val userService = buildService(userport)
     val tenantService = buildService(tenantport)
+    val contentService = buildService(contentport)
+    val personalizeService = buildService(personalizationport)
 
 		val userclient = new UserRpc.FinagledClient(userService, new TBinaryProtocol.Factory())
 		val tenantclient = new TenantRpc.FinagledClient(tenantService, new TBinaryProtocol.Factory())
+		val contentclient = new ContentRpc.FinagledClient(contentService, new TBinaryProtocol.Factory())
+    val personalizeclient = new PersonalizationRpc.FinagledClient(personalizeService, new TBinaryProtocol.Factory())
 
-		userclient.getUser() onSuccess { message => println("received user response: User.name: " + message.name.get) }
-		tenantclient.getTenant() onSuccess { message => println("received tenant response: Tenant.name: " + message.name.get) }
-		//ensure { service.close() }
+    // direct flatMap
+    // val userfuture = userclient.getUser()
+    // val contentfuture =
+    //   tenantclient.getTenant() flatMap {
+    //     t => contentclient.getContent(t)
+    //   } flatMap {
+    //     c => userfuture flatMap {
+    //       u => personalizeclient.personalizeContent(c, u)
+    //     }
+    //   }
+
+    val contentfuture = for {
+      user <- userclient.getUser()
+      tenant <- tenantclient.getTenant()
+      content <- contentclient.getContent(tenant)
+      personalized <- personalizeclient.personalizeContent(content, user)
+    } yield personalized
+
+
+		//userfuture onSuccess { message => println("received user response: User.name: " + message.name.get) }
+    contentfuture onSuccess { message => println("received content response. Content.customtext: " + message.customtext.get) }
 
 	}
 

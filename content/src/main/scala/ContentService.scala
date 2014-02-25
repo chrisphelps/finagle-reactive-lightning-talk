@@ -24,8 +24,8 @@ object ContentService {
 }
 
 class ContentServiceImpl extends ContentRpc.FutureIface {
-  def getContent() = {
-    val content = Content(Some("title"), Some("This is a full title"), Some("Unpersonalized Content"))
+  def getContent(tenant: Tenant) = {
+    val content = Content(Some("title"), Some("This is a full title"), Some("Unpersonalized Content"), tenant.id)
     Future.value(content)
   }
 }
