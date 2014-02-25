@@ -4,6 +4,7 @@ struct Content {
     1: optional string title;
     2: optional string description;
     3: optional string customtext;
+    4: optional string tenantId;
 }
 
 struct Tenant {
@@ -17,7 +18,7 @@ struct User {
 }
 
 service ContentRpc {
-  Content getContent();
+  Content getContent(1: Tenant tenant);
 }
 
 service TenantRpc {
@@ -26,4 +27,8 @@ service TenantRpc {
 
 service UserRpc {
   User getUser();
+}
+
+service PersonalizationRpc {
+    Content personalizeContent(1: Content incontent, 2: User user);
 }
